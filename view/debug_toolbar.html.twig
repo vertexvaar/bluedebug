@@ -1,0 +1,91 @@
+<style>
+    .flexbox-panel {
+        position: relative;
+        width: calc(100% - 10px);
+        background-color: #333333;
+        color: #cccccc;
+
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: center;
+        align-items: center;
+        align-content: center;
+    }
+
+    .flexbox-item {
+        padding: 5px;
+        flex: 0 1 auto;
+        position: relative;
+    }
+
+    .flexbox-item:hover {
+        flex: 0 1 auto;
+        background-color: #444444;
+    }
+
+    .infobox {
+        visibility: hidden;
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        margin-left: -60px;
+        background-color: #444444;
+        padding: 10px;
+        border-radius: 6px;
+        white-space: nowrap;
+    }
+
+    .infobox td, .infobox th {
+        text-align: left;
+        vertical-align: top;
+    }
+
+    .flexbox-item:hover .infobox {
+        visibility: visible;
+    }
+</style>
+<div id="debugtoolbar" class="flexbox-panel">
+    {% for rendering in collectorRenderings %}
+        <div class="flexbox-item">
+            {{ rendering.title }}: {{ rendering.shortInformation }}
+            {% if rendering.popupTable %}
+                <div class="infobox">
+                    <table>
+                        {% for key, value in rendering.popupTable %}
+                            <tr>
+                                <th>{{ key|raw }}</th>
+                                {% if value is iterable %}
+                                    <td>
+                                        <table>
+                                            {% for subKey, subValue in value %}
+                                                <tr>{{ subKey|raw }}</tr>
+                                                {% if subValue is iterable %}
+                                                    <td>
+                                                        <table>
+                                                            {% for subSubKey, subSubValue in subValue %}
+                                                                <tr>{{ subSubKey|raw }}</tr>
+                                                                <td>{{ subSubValue|json_encode() }}</td>
+                                                            {% endfor %}
+                                                        </table>
+                                                    </td>
+                                                {% else %}
+                                                    <td>{{ subValue }}</td>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </table>
+                                    </td>
+                                {% else %}
+                                    <td>{{ value }}</td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+    <div class="flexbox-item">
+        <a style="color: #cccccc;" href="#" onclick="document.querySelector('#debugtoolbar').remove(); return false;">Close</a>
+    </div>
+</div>

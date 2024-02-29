@@ -1,0 +1,30 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  VerteXVaaR\BlueDebug\:
+    resource: '../src/*'
+
+  VerteXVaaR\BlueDebug\Service\Stopwatch:
+    public: true
+    shared: true
+
+  VerteXVaaR\BlueDebug\Decorator\StoreDecorator:
+    decorates: VerteXVaaR\BlueSprints\Store\FileStore
+    arguments: [ '@.inner' ]
+
+  VerteXVaaR\BlueDebug\Decorator\ControllerDispatcherDecorator:
+    decorates: VerteXVaaR\BlueWeb\RequestHandler\ControllerDispatcher
+    arguments: [ '@.inner' ]
+
+  VerteXVaaR\BlueDebug\Decorator\TwigFactoryDecorator:
+    decorates: VerteXVaaR\BlueWeb\Template\TwigFactory
+    arguments: [ '@.inner' ]
+
+  VerteXVaaR\BlueDebug\Decorator\CacheDecorator:
+    decorates: VerteXVaaR\BlueSprints\Cache\Cache
+    arguments: [ '@.inner' ]
+
+  VerteXVaaR\BlueDebug\RequestHandler\MiddlewareChainDecorator:
+    decorates: VerteXVaaR\BlueWeb\Middleware\MiddlewareChain
